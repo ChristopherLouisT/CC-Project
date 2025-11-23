@@ -1,0 +1,292 @@
+import tkinter as tk
+from tkinter import font
+import threading
+import sys
+
+class SmartDoorSimulation:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Smart Door Simulation")
+        self.root.geometry("400x650")
+        self.root.configure(bg="#2c2c2c")
+        self.root.resizable(False, False)
+        
+        # Door settings
+        self.correct_pin = "123456"
+        self.current_input = ""
+        self.attempts_remaining = 3
+        self.door_locked = True
+        self.pin_tried = []
+        
+        # Create UI
+        self.create_ui()
+        
+        # Start console listener thread
+        self.console_thread = threading.Thread(target=self.console_listener, daemon=True)
+        self.console_thread.start()
+        
+    def create_ui(self):
+        # Main container for door
+        door_frame = tk.Frame(self.root, bg="#3a3a3a", bd=0)
+        door_frame.pack(pady=30, padx=50)
+        
+        # Door body
+        door_body = tk.Frame(door_frame, bg="#3a3a3a", width=300, height=500)
+        door_body.pack()
+        door_body.pack_propagate(False)
+        
+        # Keypad area
+        keypad_bg = tk.Frame(door_body, bg="#1a1a1a", bd=0)
+        keypad_bg.pack(pady=20, padx=40)
+        
+        # Display screen
+        self.display = tk.Label(
+            keypad_bg,
+            text="",
+            font=("Arial", 18, "bold"),
+            bg="#2c2c2c",
+            fg="#00ff00",
+            width=12,
+            height=2,
+            relief=tk.FLAT
+        )
+        self.display.pack(pady=15, padx=20)
+        
+        # Keypad buttons
+        keypad_frame = tk.Frame(keypad_bg, bg="#1a1a1a")
+        keypad_frame.pack(pady=10)
+        
+        buttons = [
+            ['1', '2', '3'],
+            ['4', '5', '6'],
+            ['7', '8', '9'],
+            ['*', '0', '#']
+        ]
+        
+        for row in buttons:
+            row_frame = tk.Frame(keypad_frame, bg="#1a1a1a")
+            row_frame.pack()
+            for btn_text in row:
+                btn = tk.Button(
+                    row_frame,
+                    text=btn_text,
+                    font=("Arial", 16, "bold"),
+                    width=4,
+                    height=2,
+                    bg="#3a3a3a",
+                    fg="white",
+                    bd=0,
+                    activebackground="#4a4a4a",
+                    command=lambda t=btn_text: self.button_click(t)
+                )
+                btn.pack(side=tk.LEFT, padx=3, pady=3)
+        
+        # Handle area
+        self.handle_frame = tk.Frame(door_body, bg="#cc0000", height=80)
+        self.handle_frame.pack(pady=10)
+        
+        self.handle_label = tk.Label(self.handle_frame, text="━━", font=("Arial", 20), bg="#cc0000", fg="#ffffff")
+        self.handle_label.pack()
+        
+        # Fingerprint sensor placeholder
+        fingerprint = tk.Label(
+            door_body,
+            text="◉",
+            font=("Arial", 40),
+            bg="#3a3a3a",
+            fg="#2a2a2a"
+        )
+        fingerprint.pack(pady=5)
+        
+        # Enter button
+        self.enter_btn = tk.Button(
+            self.root,
+            text="Enter",
+            font=("Arial", 14, "bold"),
+            bg="#00cc00",
+            fg="white",
+            width=15,
+            height=2,
+            bd=0,
+            command=self.check_pin
+        )
+        self.enter_btn.pack(pady=10)
+        
+        # Status display at bottom
+        status_frame = tk.Frame(self.root, bg="#4a4a4a")
+        status_frame.pack(fill=tk.X, side=tk.BOTTOM)
+        
+        self.status_label = tk.Label(
+            status_frame,
+            text=f"Smart Door Simulation\nPIN: {self.correct_pin}\nPIN_Tried: None\nRemaining try: {self.attempts_remaining}",
+            font=("Arial", 10),
+            bg="#4a4a4a",
+            fg="white",
+            justify=tk.LEFT,
+            anchor="w",
+            padx=10,
+            pady=10
+        )
+        self.status_label.pack(fill=tk.BOTH)
+        
+    def button_click(self, value):
+        if value == '*':
+            # Clear current input
+            self.current_input = ""
+            self.display.config(text="", bg="#2c2c2c")
+        elif value == '#':
+            # Backspace
+            self.current_input = self.current_input[:-1]
+            self.display.config(text="*" * len(self.current_input), bg="#2c2c2c")
+        else:
+            # Add digit
+            if len(self.current_input) < 6:
+                self.current_input += value
+                self.display.config(text="*" * len(self.current_input), bg="#2c2c2c")
+    
+    def check_pin(self):
+        # If door is unlocked and no input, lock the door
+        if not self.door_locked and not self.current_input:
+            self.door_locked = True
+            self.display.config(text="🔒 LOCKED", fg="#ff0000", bg="#440000")
+            self.enter_btn.config(bg="#00cc00", text="Enter")
+            self.handle_frame.config(bg="#cc0000")
+            self.handle_label.config(bg="#cc0000")
+            print("[SYSTEM] Door locked via keypad")
+            self.update_status()
+            self.root.after(2000, self.reset_display)
+            return
+        
+        if not self.current_input:
+            return
+            
+        self.pin_tried.append(self.current_input)
+        
+        if self.current_input == self.correct_pin:
+            self.door_locked = False
+            self.display.config(text="✓ UNLOCKED", fg="#00ff00", bg="#004400")
+            self.enter_btn.config(bg="#00cc00", text="Lock")
+            self.handle_frame.config(bg="#00cc00")
+            self.handle_label.config(bg="#00cc00")
+            print(f"[SYSTEM] Door unlocked! PIN: {self.current_input}")
+            self.attempts_remaining = 3
+        else:
+            self.attempts_remaining -= 1
+            self.display.config(text="✗ DENIED", fg="#ff0000", bg="#440000")
+            self.enter_btn.config(bg="#cc0000")
+            print(f"[SYSTEM] Wrong PIN: {self.current_input}. Remaining attempts: {self.attempts_remaining}")
+            
+            if self.attempts_remaining <= 0:
+                self.display.config(text="LOCKED OUT", fg="#ff0000", bg="#440000")
+                print("[SYSTEM] Door locked! No attempts remaining.")
+        
+        self.update_status()
+        self.current_input = ""
+        
+        # Reset display after 2 seconds
+        self.root.after(2000, self.reset_display)
+    
+    def reset_display(self):
+        self.display.config(text="", bg="#2c2c2c", fg="#00ff00")
+        if not self.door_locked:
+            self.enter_btn.config(bg="#00cc00", text="Lock")
+        else:
+            self.enter_btn.config(bg="#00cc00", text="Enter")
+    
+    def update_status(self):
+        tried_pins = ", ".join(self.pin_tried) if self.pin_tried else "None"
+        status = "UNLOCKED" if not self.door_locked else "LOCKED"
+        self.status_label.config(
+            text=f"Smart Door Simulation - {status}\nPIN: {self.correct_pin}\nPIN_Tried: {tried_pins}\nRemaining try: {self.attempts_remaining}"
+        )
+    
+    def console_listener(self):
+        """Listen for console input in a separate thread"""
+        print("\n" + "="*50)
+        print("SMART DOOR CONSOLE INTERFACE")
+        print("="*50)
+        print("Commands:")
+        print("  pin:<6-digit-pin>  - Try to unlock with PIN")
+        print("  lock               - Lock the door")
+        print("  unlock             - Force unlock the door")
+        print("  reset              - Reset attempts")
+        print("  status             - Show door status")
+        print("  quit               - Exit application")
+        print("="*50 + "\n")
+        
+        while True:
+            try:
+                command = input("Console> ").strip().lower()
+                
+                if command.startswith("pin:"):
+                    pin = command[4:].strip()
+                    if len(pin) == 6 and pin.isdigit():
+                        self.root.after(0, self.console_check_pin, pin)
+                    else:
+                        print("[ERROR] PIN must be 6 digits")
+                
+                elif command == "lock":
+                    self.root.after(0, self.console_lock)
+                    print("[SYSTEM] Door locked via console")
+                
+                elif command == "unlock":
+                    self.root.after(0, self.console_unlock)
+                    print("[SYSTEM] Door force unlocked via console")
+                
+                elif command == "reset":
+                    self.root.after(0, self.console_reset)
+                    print("[SYSTEM] Attempts reset via console")
+                
+                elif command == "status":
+                    status = "UNLOCKED" if not self.door_locked else "LOCKED"
+                    print(f"\n[STATUS] Door: {status}")
+                    print(f"[STATUS] Attempts remaining: {self.attempts_remaining}")
+                    print(f"[STATUS] PINs tried: {', '.join(self.pin_tried) if self.pin_tried else 'None'}\n")
+                
+                elif command == "quit":
+                    print("[SYSTEM] Exiting application...")
+                    self.root.after(0, self.root.quit)
+                    break
+                    
+                else:
+                    print("[ERROR] Unknown command. Type 'help' for available commands.")
+                    
+            except EOFError:
+                break
+            except Exception as e:
+                print(f"[ERROR] {e}")
+    
+    def console_check_pin(self, pin):
+        """Check PIN from console input"""
+        self.current_input = pin
+        self.check_pin()
+    
+    def console_lock(self):
+        """Lock door from console"""
+        self.door_locked = True
+        self.display.config(text="LOCKED", fg="#ff0000", bg="#440000")
+        self.handle_frame.config(bg="#cc0000")
+        self.handle_label.config(bg="#cc0000")
+        self.update_status()
+        self.root.after(2000, self.reset_display)
+    
+    def console_unlock(self):
+        """Force unlock from console"""
+        self.door_locked = False
+        self.attempts_remaining = 3
+        self.display.config(text="✓ UNLOCKED", fg="#00ff00", bg="#004400")
+        self.handle_frame.config(bg="#00cc00")
+        self.handle_label.config(bg="#00cc00")
+        self.update_status()
+        self.root.after(2000, self.reset_display)
+    
+    def console_reset(self):
+        """Reset attempts from console"""
+        self.attempts_remaining = 3
+        self.pin_tried = []
+        self.update_status()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = SmartDoorSimulation(root)
+    root.mainloop()
