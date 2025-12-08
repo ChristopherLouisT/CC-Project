@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-blue-50 flex flex-col lg:flex-row font-sans">
+<div class="w-full lg:w-1/6 bg-blue-100 p-6 flex flex-col items-center justify-between rounded-r-3xl shadow-md">
+    <div class="space-y-8">
+        <div class="p-4 bg-blue-200 rounded-2xl text-blue-800 font-bold text-lg text-center">
+            Smart Home
+        </div>
+
+        <div class="flex flex-col space-y-3 text-gray-700 w-full">
+            <!-- Active button -->
+            <a href="index.html" class="nav-btn py-2 rounded-xl flex items-center justify-center gap-2 bg-blue-600 text-white shadow-md">
+                🏠 Home
+            </a>
+
+            <!-- Inactive buttons -->
+            <button class="nav-btn py-2 rounded-xl flex items-center justify-center gap-2 text-blue-600 hover:bg-blue-500 hover:text-white transition shadow-md ">
+                💡 Devices
+            </button>
+
+            <button class="nav-btn py-2 rounded-xl flex items-center justify-center gap-2 text-blue-600 hover:bg-blue-500 hover:text-white transition shadow-md">
+                ⚙️ Settings
+            </button>
+        </div>
+    </div>
+
+    <button class="py-2 p-6 rounded-xl flex items-center justify-center gap-2 text-blue-600 hover:bg-blue-500 hover:text-white transition shadow-md">🚪 Log out</button>
+</div>
+<div class="flex">
+    <img src="./assets/bulb-light-idea-svgrepo-com.svg" alt="bulb" class="rotate-180 size-96">
+    <div>
+        <h1 class="text-4xl font-bold text-gray-800">Smart Lamp Office 1</h1>
+        <p class="text-gray-600">smart-lamp</p>
+        <p class="text-gray-600">Last contacted: 4039</p>
+    </div>
+</div>
+</body>
+</html>
