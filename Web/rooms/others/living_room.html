@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Living Room</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <style>
+        .shake {
+            animation: shake 0.4s ease;
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+            100% { transform: translateX(0); }
+        }
+        input[type="color"] {
+            padding: 0 !important;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0 !important;
+        }
+        input[type="color"]::-webkit-color-swatch {
+            border: none !important;
+            border-radius: 0.75rem;
+        }
+    </style>
+
+    <body class="min-h-screen bg-gradient-to-br from-blue-200 to-blue-50 p-8">
+        <!-- Back Button -->
+        <a href="../rooms.html" class="inline-block mb-6 px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700">
+        ← Back
+        </a>
+
+        <p class="mt-2 mb-5 py-2 text-3xl text-black font-bold">Living Room Settings</p>
+
+        <div class="p-6 bg-white shadow-xl rounded-3xl space-y-8">
+
+            <!-- Lamp Card -->
+            <div class="p-6 rounded-3xl shadow-inner bg-gradient-to-b from-gray-900 to-gray-700">
+
+                <h2 class="text-xl font-bold text-blue-200 mb-4">💡 First Lamp</h2>
+
+                <!-- Dark background + spotlight -->
+                <div class="relative flex justify-center items-center">
+
+                <!-- Dark room background -->
+                    <div class="absolute w-48 h-48 bg-black rounded-full blur-3xl opacity-70"></div>
+
+                    <!-- Lamp glow -->
+                    <div id="lampGlow"
+                        class="relative w-32 h-32 rounded-full transition-all duration-500 shadow-xl"
+                        style="background: #111;">
+                    </div>
+
+                </div>
+
+                <div class="flex items-center justify-between mt-5">
+                    <span class="font-medium text-gray-200">Lamp Status:</span>
+                    <button 
+                        id="lampToggle"
+                        class="px-4 py-2 rounded-xl font-semibold 
+                            bg-gray-300 text-gray-900 hover:bg-gray-400 transition">
+                        OFF
+                    </button>
+                </div>
+
+                <!-- Brightness Slider -->
+                <div class="mt-4">
+                    <label class="font-medium text-gray-300">
+                        Brightness: <span id="brightnessValue" class="text-white font-semibold ml-1">50%</span>
+                    </label>
+
+                    <input id="brightnessSlider" 
+                        type="range" 
+                        min="1" 
+                        max="100" 
+                        value="50"
+                        class="w-full accent-blue-500 mt-2">
+                </div>
+
+                <!-- Color Picker -->
+                <div class="mt-0">
+                    <label class="font-medium text-gray-300">Light Color</label>
+                    <input id="colorPicker" type="color" value="#ffffff"
+                        class="block w-full h-12 rounded-xl mt-2 cursor-pointer border border-gray-300">
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 mt-5 bg-white shadow-xl rounded-3xl space-y-8">
+
+            <!-- Lamp Card -->
+            <div class="p-6 rounded-3xl shadow-inner bg-gradient-to-b from-gray-900 to-gray-700">
+
+                <h2 class="text-xl font-bold text-blue-200 mb-4">💡 Second Lamp</h2>
+
+                <!-- Dark background + spotlight -->
+                <div class="relative flex justify-center items-center">
+
+                <!-- Dark room background -->
+                    <div class="absolute w-48 h-48 bg-black rounded-full blur-3xl opacity-70"></div>
+
+                    <!-- Lamp glow -->
+                    <div id="lampGlow2"
+                        class="relative w-32 h-32 rounded-full transition-all duration-500 shadow-xl"
+                        style="background: #111;">
+                    </div>
+
+                </div>
+
+                <div class="flex items-center justify-between mt-5">
+                    <span class="font-medium text-gray-200">Lamp Status:</span>
+                    <button 
+                        id="lampToggle2"
+                        class="px-4 py-2 rounded-xl font-semibold 
+                            bg-gray-300 text-gray-900 hover:bg-gray-400 transition">
+                        OFF
+                    </button>
+                </div>
+
+                <!-- Brightness Slider -->
+                <div class="mt-4">
+                    <label class="font-medium text-gray-300">
+                        Brightness: <span id="brightnessValue2" class="text-white font-semibold ml-1">50%</span>
+                    </label>
+
+                    <input id="brightnessSlider2" 
+                        type="range" 
+                        min="1" 
+                        max="100" 
+                        value="50"
+                        class="w-full accent-blue-500 mt-2">
+                </div>
+
+                <!-- Color Picker -->
+                <div class="mt-0">
+                    <label class="font-medium text-gray-300">Light Color</label>
+                    <input id="colorPicker2" type="color" value="#ffffff"
+                        class="block w-full h-12 rounded-xl mt-2 cursor-pointer border border-gray-300">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+  // ------------------------
+  // LAMP LOGIC
+  // ------------------------
+  let lampOn = false;
+  const lampToggle = document.getElementById("lampToggle");
+  const lampGlow = document.getElementById("lampGlow");
+  const brightnessSlider = document.getElementById("brightnessSlider");
+  const colorPicker = document.getElementById("colorPicker");
+
+    const brightnessValue = document.getElementById("brightnessValue");
+
+    brightnessSlider.addEventListener("input", () => {
+        brightnessValue.textContent = brightnessSlider.value + "%";
+    });
+
+  function updateLampGlow() {
+    if (!lampOn) {
+      lampGlow.style.background = "#222";
+      lampGlow.style.boxShadow = "none";
+      return;
+    }
+
+    const color = colorPicker.value;
+    const intensity = brightnessSlider.value / 10;
+
+    lampGlow.style.background = color;
+    lampGlow.style.boxShadow = `
+      0 0 ${10 * intensity}px ${color},
+      0 0 ${25 * intensity}px ${color}
+    `;
+  }
+
+  lampToggle.addEventListener("click", () => {
+    lampOn = !lampOn;
+
+    if (lampOn) {
+      lampToggle.textContent = "ON";
+      lampToggle.classList.remove("bg-gray-300", "text-gray-800");
+      lampToggle.classList.add("bg-green-500", "text-white");
+    } else {
+      lampToggle.textContent = "OFF";
+      lampToggle.classList.add("bg-gray-300", "text-gray-800");
+      lampToggle.classList.remove("bg-green-500", "text-white");
+    }
+
+    updateLampGlow();
+  });
+
+  brightnessSlider.addEventListener("input", updateLampGlow);
+  colorPicker.addEventListener("input", updateLampGlow);
+
+//   async function sendLampUpdateToAWS(brightness, powerState, colorHex) {
+
+//     const awsEndpoint = "https://your-api-id.execute-api.region.amazonaws.com/prod/updateLamp";
+
+
+//     const payload = {
+//         brightness: brightness,     // number (0–100)
+//         power: powerState,          // "on" or "off"
+//         color: colorHex             // "#RRGGBB"
+//     };
+
+//     try {
+//         const response = await fetch(awsEndpoint, {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify(payload)
+//         });
+
+//         const result = await response.json();
+
+//         console.log("AWS Response:", result);
+//         return result;
+
+//     } catch (err) {
+//         console.error("Failed to send data to AWS:", err);
+//     }
+// }
+</script>
+
+<script>
+  let lampOn2 = false;
+  const lampToggle2 = document.getElementById("lampToggle2");
+  const lampGlow2 = document.getElementById("lampGlow2");
+  const brightnessSlider2 = document.getElementById("brightnessSlider2");
+  const colorPicker2 = document.getElementById("colorPicker2");
+
+    const brightnessValue2 = document.getElementById("brightnessValue2");
+
+    brightnessSlider2.addEventListener("input", () => {
+        brightnessValue2.textContent = brightnessSlider2.value + "%";
+    });
+
+  function updateLampGlow2() {
+    if (!lampOn2) {
+        console.log('working')
+      lampGlow2.style.background = "#222";
+      lampGlow2.style.boxShadow = "none";
+      return;
+    }
+
+    const color2 = colorPicker2.value;
+    const intensity2 = brightnessSlider2.value / 10;
+
+    lampGlow2.style.background = color2;
+    lampGlow2.style.boxShadow = `
+      0 0 ${10 * intensity2}px ${color2},
+      0 0 ${25 * intensity2}px ${color2}
+    `;
+  }
+
+  lampToggle2.addEventListener("click", () => {
+    lampOn2 = !lampOn2;
+
+    if (lampOn2) {
+      lampToggle2.textContent = "ON";
+      lampToggle2.classList.remove("bg-gray-300", "text-gray-800");
+      lampToggle2.classList.add("bg-green-500", "text-white");
+    } else {
+      lampToggle2.textContent = "OFF";
+      lampToggle2.classList.add("bg-gray-300", "text-gray-800");
+      lampToggle2.classList.remove("bg-green-500", "text-white");
+    }
+
+    updateLampGlow2();
+  });
+
+  brightnessSlider.addEventListener("input", updateLampGlow);
+  colorPicker.addEventListener("input", updateLampGlow);
+</script>
