@@ -145,10 +145,58 @@
                         class="block w-full h-12 rounded-xl mt-2 cursor-pointer border border-gray-300">
                 </div>
             </div>
+
+            <div class="p-6 bg-white rounded-3xl shadow-xl border border-gray-100 flex flex-col justify-between">
+
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-700">🌡️ Thermometer</h2>
+                        <p id="thermoLastUpdate" class="text-xs text-gray-400 mt-1">Waiting for data...</p>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Humidity</span>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xl">💧</span>
+                            <span id="humidValue" class="text-2xl font-bold text-gray-600">--%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-grow flex items-center justify-center py-6">
+                    <div class="text-center">
+                        <span id="tempValue" class="text-6xl font-extrabold text-gray-800 tracking-tight">--.-°C</span>
+                        <p class="text-sm text-gray-400 font-medium mt-2">Room Temperature</p>
+                    </div>
+                </div>
+
+                <button id="unitToggleBtn"
+                        class="w-full py-3 rounded-xl font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 active:scale-95 transition-all">
+                    Switch to °F
+                </button>
+
+            </div>
         </div>
     </body>
 </html>
 
+<script src="../../iot-api.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        // 3. Setup Thermometer (BARU) 🌡️
+        const parentThermo = initSmartThermometer({
+            deviceId: "living-room-thermometer-01",
+
+            // Mapping ID Element HTML
+            tempValueEl: document.getElementById("tempValue"),
+            humidValueEl: document.getElementById("humidValue"),
+            unitBtnEl: document.getElementById("unitToggleBtn"),
+            lastUpdateEl: document.getElementById("thermoLastUpdate")
+        });
+        registerDevice(parentThermo);
+
+    });
+</script>
 <script>
   // ------------------------
   // LAMP LOGIC

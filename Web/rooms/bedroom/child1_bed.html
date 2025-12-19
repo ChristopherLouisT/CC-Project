@@ -42,7 +42,7 @@
         <div class="p-6 bg-white shadow-xl rounded-3xl space-y-8">
 
         <!-- Lamp Card -->
-        <div class="p-6 rounded-3xl shadow-inner bg-gradient-to-b from-gray-900 to-gray-700">
+        <div id="" class="p-6 rounded-3xl shadow-inner bg-gradient-to-b from-gray-900 to-gray-700">
 
             <h2 class="text-xl font-bold text-blue-200 mb-4">💡 Main Lamp</h2>
 
@@ -179,6 +179,21 @@
 
     </body>
 </html>
+
+<script src="../../iot-api.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const childLamp = initSmartLamp({
+            deviceId: "child1-lamp-01", // <--- ID BEDA, LOGIC SAMA
+            toggleBtn: document.getElementById("lampToggle"),
+            glowEl: document.getElementById("lampGlow"),
+            sliderEl: document.getElementById("brightnessSlider"),
+            valueEl: document.getElementById("brightnessValue"),
+            colorEl: document.getElementById("colorPicker")
+        });
+        registerDevice(childLamp);
+    });
+</script>
 
 <script>
   // ------------------------

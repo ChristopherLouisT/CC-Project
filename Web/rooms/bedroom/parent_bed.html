@@ -93,256 +93,151 @@
         </div>
 
         <!-- Door Lock -->
-         <div id="doorWrapper"
-        class="p-6 bg-gradient-to-br from-red-100 to-red-200 rounded-3xl shadow-xl border border-red-300/40 transition-all duration-700">
+            <div class="p-6 bg-white rounded-3xl shadow-xl border border-gray-100 flex flex-col items-center text-center">
 
-        <h2 class="text-2xl font-extrabold text-red-700 mb-4 text-center drop-shadow">
-            🔒 Smart Door Lock
-        </h2>
+                <h2 class="text-xl font-bold text-gray-700 mb-2">🚪 Front Door Lock</h2>
 
-        <!-- Lock Icon -->
-        <div id="lockIcon"
-            class="mx-auto text-7xl text-red-600 mb-2 flex justify-center transition-all duration-700 drop-shadow-lg">
-            🔒
-        </div>
+                <div id="lockIconWrapper" class="p-6 rounded-full bg-red-100 mb-4 transition-colors duration-500">
+                    <span id="lockIcon" class="text-5xl">🔒</span>
+                </div>
 
-        <!-- Status Text -->
-        <div id="lockStatus"
-            class="text-lg font-semibold text-red-700 mb-6 text-center tracking-wide">
-            Locked
-        </div>
+                <div class="mb-6">
+                    <p class="text-gray-500 text-sm font-medium">CURRENT STATUS</p>
+                    <p id="lockStatusText" class="text-2xl font-bold text-red-600 transition-colors">LOCKED</p>
+                </div>
 
-        <!-- PIN Indicator -->
-        <div id="pinDots" class="flex justify-center gap-3 mb-6">
-            <div class="w-4 h-4 bg-white/50 rounded-full shadow-inner"></div>
-            <div class="w-4 h-4 bg-white/50 rounded-full shadow-inner"></div>
-            <div class="w-4 h-4 bg-white/50 rounded-full shadow-inner"></div>
-            <div class="w-4 h-4 bg-white/50 rounded-full shadow-inner"></div>
-        </div>
+                <button id="masterLockBtn"
+                        class="w-full py-3 px-6 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2">
+                    <span>🔓 Remote Unlock</span>
+                </button>
 
-        <!-- Keypad -->
-        <div id="keypad" class="grid grid-cols-3 gap-4 select-none">
-
-            <button onclick="pressKey('1')" 
-            class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">1</button>
-
-            <button onclick="pressKey('2')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">2</button>
-
-            <button onclick="pressKey('3')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">3</button>
-
-            <button onclick="pressKey('4')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">4</button>
-
-            <button onclick="pressKey('5')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">5</button>
-
-            <button onclick="pressKey('6')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">6</button>
-
-            <button onclick="pressKey('7')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">7</button>
-
-            <button onclick="pressKey('8')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">8</button>
-            
-            <button onclick="pressKey('9')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">9</button>
-
-            <div></div>
-
-            <button onclick="pressKey('0')" class="text-2xl font-bold py-4 bg-white/70 backdrop-blur-sm rounded-2xl
-            shadow-md hover:bg-white transition active:scale-95">0</button>
-
-            <button onclick="clearPin()"
-                    class="text-xl font-bold py-4 bg-red-400/80 text-white backdrop-blur rounded-2xl 
-                        hover:bg-red-500 transition shadow-md">
-                Clear
-            </button>
-        </div>
-
-        <button id="lockAgainBtn"
-                onclick="lockDoor()"
-                class="w-full py-3 mt-6 rounded-xl font-bold bg-red-600 text-white 
-                    hover:bg-red-700 transition hidden">
-            Lock Door Again
-        </button>
-
-    </div>
-
-</div>
-
-
+                <p class="mt-4 text-xs text-gray-400">
+                    Admin Override • No PIN Required
+                </p>
+            </div>
         </div>
 
     </body>
 </html>
 
+<script src="../../iot-api.js"></script>
 <script>
-  // ------------------------
-  // LAMP LOGIC
-  // ------------------------
-  let lampOn = false;
-  const lampToggle = document.getElementById("lampToggle");
-  const lampGlow = document.getElementById("lampGlow");
-  const brightnessSlider = document.getElementById("brightnessSlider");
-  const colorPicker = document.getElementById("colorPicker");
+    // -------------------------------------------------------
+    // KONFIGURASI KHUSUS PARENT ROOM
+    // Di sini kita "mengikat" UI Parent Room ke Device ID tertentu
+    // -------------------------------------------------------
 
-    const brightnessValue = document.getElementById("brightnessValue");
+    document.addEventListener("DOMContentLoaded", () => {
 
-    brightnessSlider.addEventListener("input", () => {
-        brightnessValue.textContent = brightnessSlider.value + "%";
+        // 1. Inisialisasi Lampu Parent
+        const parentLamp = initSmartLamp({
+            deviceId: "parent-lamp-01", // <--- INI KUNCI UTAMANYA (Harus unik per kamar)
+            toggleBtn: document.getElementById("lampToggle"),
+            glowEl: document.getElementById("lampGlow"),
+            sliderEl: document.getElementById("brightnessSlider"),
+            valueEl: document.getElementById("brightnessValue"),
+            colorEl: document.getElementById("colorPicker")
+        });
+
+        // Daftarkan ke sistem polling agar otomatis update
+        registerDevice(parentLamp);
+
+
+        // 2. Setup Door Lock
+        const parentLock = initSmartLock({
+            deviceId: "parent-lock-01",
+
+            // Masukkan ID elemen dari Card Admin Dashboard
+            iconWrapperEl: document.getElementById("lockIconWrapper"),
+            iconEl: document.getElementById("lockIcon"),
+            statusTextEl: document.getElementById("lockStatusText"),
+            toggleBtnEl: document.getElementById("masterLockBtn")
+        });
+        registerDevice(parentLock);
     });
 
-  function updateLampGlow() {
-    if (!lampOn) {
-      lampGlow.style.background = "#222";
-      lampGlow.style.boxShadow = "none";
-      return;
-    }
-
-    const color = colorPicker.value;
-    const intensity = brightnessSlider.value / 10;
-
-    lampGlow.style.background = color;
-    lampGlow.style.boxShadow = `
-      0 0 ${10 * intensity}px ${color},
-      0 0 ${25 * intensity}px ${color}
-    `;
-  }
-
-  lampToggle.addEventListener("click", () => {
-    lampOn = !lampOn;
-
-    if (lampOn) {
-      lampToggle.textContent = "ON";
-      lampToggle.classList.remove("bg-gray-300", "text-gray-800");
-      lampToggle.classList.add("bg-green-500", "text-white");
-    } else {
-      lampToggle.textContent = "OFF";
-      lampToggle.classList.add("bg-gray-300", "text-gray-800");
-      lampToggle.classList.remove("bg-green-500", "text-white");
-    }
-
-    updateLampGlow();
-  });
-
-  brightnessSlider.addEventListener("input", updateLampGlow);
-  colorPicker.addEventListener("input", updateLampGlow);
-
-//   async function sendLampUpdateToAWS(brightness, powerState, colorHex) {
-
-//     const awsEndpoint = "https://your-api-id.execute-api.region.amazonaws.com/prod/updateLamp";
-
-
-//     const payload = {
-//         brightness: brightness,     // number (0–100)
-//         power: powerState,          // "on" or "off"
-//         color: colorHex             // "#RRGGBB"
-//     };
-
-//     try {
-//         const response = await fetch(awsEndpoint, {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json"
-//             },
-//             body: JSON.stringify(payload)
-//         });
-
-//         const result = await response.json();
-
-//         console.log("AWS Response:", result);
-//         return result;
-
-//     } catch (err) {
-//         console.error("Failed to send data to AWS:", err);
-//     }
-// }
 </script>
 
-<script>
-let pin = "";
-const correctPin = "1234";
+<!--<script>-->
+<!--let pin = "";-->
+<!--const correctPin = "1234";-->
 
-function pressKey(num) {
-    if (pin.length >= 4) return;
-    pin += num;
-    updateDots();
+<!--function pressKey(num) {-->
+<!--    if (pin.length >= 4) return;-->
+<!--    pin += num;-->
+<!--    updateDots();-->
 
-    if (pin.length === 4) {
-        validatePin();
-    }
-}
+<!--    if (pin.length === 4) {-->
+<!--        validatePin();-->
+<!--    }-->
+<!--}-->
 
-function updateDots() {
-    const dots = document.querySelectorAll("#pinDots div");
-    dots.forEach((d, i) => {
-        d.style.background = i < pin.length ? "#dc2626" : "rgba(255,255,255,0.6)";
-    });
-}
+<!--function updateDots() {-->
+<!--    const dots = document.querySelectorAll("#pinDots div");-->
+<!--    dots.forEach((d, i) => {-->
+<!--        d.style.background = i < pin.length ? "#dc2626" : "rgba(255,255,255,0.6)";-->
+<!--    });-->
+<!--}-->
 
-function validatePin() {
-    if (pin === correctPin) {
-        unlockDoor();
-    } else {
-        wrongPin();
-    }
-}
+<!--function validatePin() {-->
+<!--    if (pin === correctPin) {-->
+<!--        unlockDoor();-->
+<!--    } else {-->
+<!--        wrongPin();-->
+<!--    }-->
+<!--}-->
 
-function unlockDoor() {
-    document.getElementById("lockIcon").textContent = "🔓";
-    // document.getElementById("lockIcon").classList.add("scale-125");
-    
-    const status = document.getElementById("lockStatus");
-    status.textContent = "Unlocked";
-    status.classList.remove("text-red-700");
-    status.classList.add("text-green-700");
+<!--function unlockDoor() {-->
+<!--    document.getElementById("lockIcon").textContent = "🔓";-->
+<!--    // document.getElementById("lockIcon").classList.add("scale-125");-->
+<!--    -->
+<!--    const status = document.getElementById("lockStatus");-->
+<!--    status.textContent = "Unlocked";-->
+<!--    status.classList.remove("text-red-700");-->
+<!--    status.classList.add("text-green-700");-->
 
-    // Change background to green
-    const wrapper = document.getElementById("doorWrapper");
-    wrapper.classList.remove("from-red-100", "to-red-200");
-    wrapper.classList.add("from-green-100", "to-green-200", "border-green-300/40");
+<!--    // Change background to green-->
+<!--    const wrapper = document.getElementById("doorWrapper");-->
+<!--    wrapper.classList.remove("from-red-100", "to-red-200");-->
+<!--    wrapper.classList.add("from-green-100", "to-green-200", "border-green-300/40");-->
 
-    // Hide keypad, show lock again button
-    document.getElementById("keypad").classList.add("hidden");
-    document.getElementById("lockAgainBtn").classList.remove("hidden");
+<!--    // Hide keypad, show lock again button-->
+<!--    document.getElementById("keypad").classList.add("hidden");-->
+<!--    document.getElementById("lockAgainBtn").classList.remove("hidden");-->
 
-    clearPin();
-}
+<!--    clearPin();-->
+<!--}-->
 
-function wrongPin() {
-    const dots = document.getElementById("pinDots");
-    dots.classList.add("shake");
+<!--function wrongPin() {-->
+<!--    const dots = document.getElementById("pinDots");-->
+<!--    dots.classList.add("shake");-->
 
-    setTimeout(() => dots.classList.remove("shake"), 400);
-    clearPin();
-}
+<!--    setTimeout(() => dots.classList.remove("shake"), 400);-->
+<!--    clearPin();-->
+<!--}-->
 
-function clearPin() {
-    pin = "";
-    updateDots();
-}
+<!--function clearPin() {-->
+<!--    pin = "";-->
+<!--    updateDots();-->
+<!--}-->
 
-function lockDoor() {
-    const status = document.getElementById("lockStatus");
-    status.textContent = "Locked";
-    status.classList.remove("text-green-700");
-    status.classList.add("text-red-700");
+<!--function lockDoor() {-->
+<!--    const status = document.getElementById("lockStatus");-->
+<!--    status.textContent = "Locked";-->
+<!--    status.classList.remove("text-green-700");-->
+<!--    status.classList.add("text-red-700");-->
 
-    const wrapper = document.getElementById("doorWrapper");
+<!--    const wrapper = document.getElementById("doorWrapper");-->
 
-    // return background to red
-    wrapper.classList.add("from-red-100", "to-red-200", "border-red-300/40");
-    wrapper.classList.remove("from-green-100", "to-green-200", "border-green-300/40");
+<!--    // return background to red-->
+<!--    wrapper.classList.add("from-red-100", "to-red-200", "border-red-300/40");-->
+<!--    wrapper.classList.remove("from-green-100", "to-green-200", "border-green-300/40");-->
 
-    document.getElementById("lockIcon").textContent = "🔒";
-    document.getElementById("lockIcon").classList.remove("scale-125");
+<!--    document.getElementById("lockIcon").textContent = "🔒";-->
+<!--    document.getElementById("lockIcon").classList.remove("scale-125");-->
 
-    // Show keypad again
-    document.getElementById("keypad").classList.remove("hidden");
-    document.getElementById("lockAgainBtn").classList.add("hidden");
-}
-</script>
+<!--    // Show keypad again-->
+<!--    document.getElementById("keypad").classList.remove("hidden");-->
+<!--    document.getElementById("lockAgainBtn").classList.add("hidden");-->
+<!--}-->
+<!--</script>-->
