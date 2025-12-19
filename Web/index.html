@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Home Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Home Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Glassmorphism utilities */
+    /* Glassmorphism */
     .glass {
       background: rgba(255, 255, 255, 0.55);
       backdrop-filter: blur(16px);
@@ -20,304 +19,188 @@
       -webkit-backdrop-filter: blur(20px);
     }
 
-    /* Soft glow */
-    .glow {
-      box-shadow: 0 0 18px rgba(59,130,246,.45);
-    }
-
-    /* Floating hover card */
-    .hover-float:hover {
-      transform: translateY(-3px) scale(1.02);
-      transition: 200ms ease;
-    }
-
-    /* Active nav highlight */
     .active-pill {
       background: linear-gradient(135deg, #3b82f6, #60a5fa);
       color: white !important;
       box-shadow: 0 4px 14px rgba(59,130,246,.4);
     }
-
-    /* Animated lock glow */
-    @keyframes lockPulse {
-      0% { text-shadow: 0 0 4px rgba(0,255,100,0.4); }
-      50% { text-shadow: 0 0 14px rgba(0,255,100,0.9); }
-      100% { text-shadow: 0 0 4px rgba(0,255,100,0.4); }
-    }
-    .lock-glow {
-      animation: lockPulse 1.6s infinite;
-    }
   </style>
+</head>
 
-  <body class="min-h-screen bg-gradient-to-br from-blue-200 to-blue-50 flex flex-col lg:flex-row font-sans">
+<body class="min-h-screen bg-gradient-to-br from-blue-200 to-blue-50 flex flex-col lg:flex-row font-sans">
 
-    <!-- Sidebar -->
-    <aside class="w-64 glass-dark text-white shadow-2xl p-6 flex flex-col justify-between rounded-r-3xl">
+<!-- SIDEBAR / TOPBAR -->
+<aside class="w-full lg:w-64 glass-dark text-white shadow-2xl p-4 lg:p-6
+              flex flex-row lg:flex-col justify-between
+              rounded-b-3xl lg:rounded-b-none lg:rounded-r-3xl
+              sticky top-0 z-50">
 
+  <div class="flex flex-row lg:flex-col items-center lg:items-stretch gap-4 w-full">
+
+    <div class="hidden lg:block text-center py-4 mb-6 rounded-2xl bg-white/20 font-bold text-xl">
+      Smart Home 🌐
+    </div>
+
+    <div class="flex flex-row lg:flex-col gap-3 w-full justify-center">
+      <a href="index.html"
+         class="py-2 px-4 rounded-xl text-center bg-white/20 hover:bg-white/10 active-pill">
+        🏠 Home
+      </a>
+      <a href="rooms/rooms.html"
+         class="py-2 px-4 rounded-xl text-center bg-white/20 hover:bg-white/10 transition">
+        🏘️ Rooms
+      </a>
+    </div>
+
+  </div>
+
+  <button class="hidden lg:block w-full py-3 mt-6 rounded-xl bg-white/10 hover:bg-white/30 transition">
+    🚪 Log out
+  </button>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 p-4 sm:p-6 lg:p-10 space-y-6 lg:space-y-8">
+
+<h1 class="text-2xl sm:text-3xl font-semibold text-gray-800">
+  Welcome back, D Group!
+</h1>
+
+<!-- STATUS CARDS -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+
+  <div class="glass shadow-md rounded-2xl p-5 flex items-center gap-4">
+    <span class="text-blue-600 text-3xl">🌡️</span>
     <div>
-      <div class="text-center py-4 mb-8 rounded-2xl bg-white/20 font-bold text-xl">
-        Smart Home 🌐
-      </div>
-
-      <div class="space-y-3">
-        <a href="index.html" class="block py-3 rounded-xl text-center bg-white/20 hover:bg-white/10 active-pill">
-          🏠 Home
-        </a>
-        <a href="rooms/rooms.html" class="block py-3 rounded-xl text-center bg-white/20 hover:bg-white/10 transition">
-          🏘️ Rooms
-        </a>
-      </div>
+      <p class="text-gray-600 text-sm">Temperature</p>
+      <h2 class="text-xl font-bold">22°C</h2>
     </div>
+  </div>
 
-    <button class="w-full py-3 mt-8 text-center rounded-xl bg-white/10 hover:bg-white/30 transition">
-      🚪 Log out
+  <div class="glass shadow-md rounded-2xl p-5 flex items-center gap-4">
+    <span class="text-blue-600 text-3xl">💧</span>
+    <div>
+      <p class="text-gray-600 text-sm">Humidity</p>
+      <h2 class="text-xl font-bold">40%</h2>
+    </div>
+  </div>
+
+  <div class="glass shadow-md rounded-2xl p-5 flex items-center gap-4">
+    <span class="text-blue-600 text-3xl">⚡</span>
+    <div>
+      <p class="text-gray-600 text-sm">Electricity</p>
+      <h2 id="electricity" class="text-xl font-bold">1.8 kWh</h2>
+    </div>
+  </div>
+
+  <div class="glass shadow-md rounded-2xl p-5 flex items-center justify-between">
+    <span id="lockIcon" class="text-3xl">🔒</span>
+    <button id="securityBtn"
+      class="bg-green-500 text-white px-4 py-1 rounded-xl font-bold">
+      Armed
     </button>
+  </div>
 
-  </aside>
+</div>
 
-    <!-- Main Content -->
-    <div class="flex-1 p-10 space-y-8">
-      <h1 class="text-3xl font-semibold text-gray-800">Welcome back, D Group!</h1>
+<!-- DEVICES -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
 
-      <!-- Weather Section -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- LAMP -->
+<div class="glass shadow-lg rounded-2xl p-6">
+  <div class="flex justify-between items-center">
+    <h2 class="text-lg font-semibold">💡 Lamp</h2>
+    <label class="relative inline-flex cursor-pointer">
+      <input type="checkbox" id="lampSwitch" class="sr-only peer">
+      <div class="w-12 h-6 bg-gray-300 rounded-full peer-checked:bg-blue-500"></div>
+      <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full peer-checked:translate-x-6 transition"></div>
+    </label>
+  </div>
 
-        <!-- Temperature -->
-        <div class="bg-white shadow-md rounded-2xl p-6 flex items-center space-x-4">
-            <span class="text-blue-600 text-3xl">🌡️</span>
-            <div>
-            <p class="text-gray-600 text-sm">Temperature</p>
-            <h2 id="temp" class="text-2xl font-bold text-gray-800">22°C</h2>
-            </div>
-        </div>
+  <p id="lampStatus" class="text-center text-gray-600 mt-4">
+    Lamp is off
+  </p>
 
-        <!-- Humidity -->
-        <div class="bg-white shadow-md rounded-2xl p-6 flex items-center space-x-4">
-            <span class="text-blue-600 text-3xl">💧</span>
-            <div>
-            <p class="text-gray-600 text-sm">Humidity</p>
-            <h2 id="humidity" class="text-2xl font-bold text-gray-800">40%</h2>
-            </div>
-        </div>
+  <div id="lightOptions" class="hidden mt-6 flex flex-col sm:flex-row gap-3 justify-around">
+    <button onclick="setLightType('Warm')" id="warmBtn"
+      class="px-6 py-2 rounded-full bg-blue-500 text-white">
+      Warm
+    </button>
+    <button onclick="setLightType('Daylight')" id="daylightBtn"
+      class="px-6 py-2 rounded-full border border-blue-500 text-blue-500">
+      Daylight
+    </button>
+    <button onclick="setLightType('Cool')" id="coolBtn"
+      class="px-6 py-2 rounded-full border border-blue-500 text-blue-500">
+      Cool
+    </button>
+  </div>
+</div>
 
-        <!-- Electricity Usage -->
-        <div class="bg-white shadow-md rounded-2xl p-6 flex items-center space-x-4">
-            <span class="text-blue-600 text-3xl">⚡</span>
-            <div>
-            <p class="text-gray-600 text-sm">Electricity Usage</p>
-            <h2 id="electricity" class="text-2xl font-bold text-gray-800">1.8 kWh</h2>
-            </div>
-        </div>
+<!-- VEHICLE -->
+<div class="glass shadow-lg rounded-2xl p-6">
+  <div class="flex justify-between items-center">
+    <h2 class="text-lg font-semibold">🚗 Vehicle</h2>
+    <button id="updateLocation"
+      class="bg-blue-600 text-white px-4 py-2 rounded-xl">
+      Update
+    </button>
+  </div>
 
-        <!-- Security System -->
-        <div class="bg-white shadow-md rounded-2xl p-6 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <span id="lockIcon" class="text-blue-600 text-3xl">🔒</span>
-                <div>
-                    <p class="text-gray-600 text-sm">Security Status</p>
-                    <button
-                        id="securityBtn"
-                        class="text-2xl font-bold bg-green-500 text-white px-4 py-1 rounded-xl shadow-md hover:bg-green-600 transition-all duration-300">
-                        Armed
-                    </button>
-                </div>
-            </div>
-        </div>
+  <div class="mt-4 text-center text-sm sm:text-base text-gray-700">
+    <p>Latitude: <span id="lat">-6.2000</span></p>
+    <p>Longitude: <span id="lng">106.8167</span></p>
+  </div>
+</div>
 
-    </div>
+</div>
+</main>
 
-      <!-- Devices Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- Lamp Control -->
-        <div class="bg-white shadow-lg rounded-2xl p-6">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              💡 Lamp Control
-            </h2>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="lampSwitch" class="sr-only peer" />
-              <div class="w-12 h-6 bg-gray-300 rounded-full peer-focus:outline-none peer peer-checked:bg-blue-500 transition-colors duration-300"></div>
-              <div class="absolute left-[2px] top-[2px] bg-white w-5 h-5 rounded-full transition-all duration-300 peer-checked:translate-x-6 shadow-md"></div>
-            </label>
-          </div>
-
-          <div id="lightOptions" class="hidden mt-6 flex justify-around">
-            <button onclick="setLightType('Warm')" id="warmBtn" class="rounded-full px-6 py-2 bg-blue-500 text-white">Warm</button>
-            <button onclick="setLightType('Daylight')" id="daylightBtn" class="rounded-full px-6 py-2 border border-blue-500 text-blue-500">Daylight</button>
-            <button onclick="setLightType('Cool')" id="coolBtn" class="rounded-full px-6 py-2 border border-blue-500 text-blue-500">Cool</button>
-          </div>
-
-          <p id="lampStatus" class="text-gray-500 text-center mt-4">Lamp is turned off</p>
-        </div>
-
-        <!-- Air Conditioning -->
-        <!-- <div class="bg-white shadow-lg rounded-2xl p-6">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              ☀️ Air Conditioning
-            </h2>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="acSwitch" class="sr-only peer" checked />
-              <div class="w-12 h-6 bg-gray-300 rounded-full peer-focus:outline-none peer peer-checked:bg-blue-500 transition-colors duration-300"></div>
-              <div class="absolute left-[2px] top-[2px] bg-white w-5 h-5 rounded-full transition-all duration-300 peer-checked:translate-x-6 shadow-md"></div>
-            </label>
-          </div>
-          <p id="acStatus" class="text-gray-600 text-center mt-4">Status: Running</p>
-        </div> -->
-
-        <!-- Connected Devices -->
-        <!-- <div class="bg-white shadow-lg rounded-2xl p-6">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            🖥️ Connected Devices
-          </h2>
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-blue-100 text-blue-800 p-4 rounded-2xl text-center font-semibold shadow-sm hover:bg-blue-200 cursor-pointer">TV</div>
-            <div class="bg-blue-100 text-blue-800 p-4 rounded-2xl text-center font-semibold shadow-sm hover:bg-blue-200 cursor-pointer">Laptop</div>
-            <div class="bg-blue-100 text-blue-800 p-4 rounded-2xl text-center font-semibold shadow-sm hover:bg-blue-200 cursor-pointer">Fridge</div>
-            <div class="bg-blue-100 text-blue-800 p-4 rounded-2xl text-center font-semibold shadow-sm hover:bg-blue-200 cursor-pointer">Router</div>
-          </div>
-        </div> -->
-
-        <!-- Vehicle Tracker -->
-        <div class="bg-white shadow-lg rounded-2xl p-6">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              🚗 Vehicle Tracker
-            </h2>
-            <button id="updateLocation" class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">Update</button>
-          </div>
-          <div class="mt-4 text-gray-600 text-center">
-            <p>Latitude: <span id="lat">-6.2000</span></p>
-            <p>Longitude: <span id="lng">106.8167</span></p>
-          </div>
-        </div>
-
-        <!-- Smart Music -->
-        <!-- <div class="bg-white shadow-lg rounded-2xl p-6">
-          <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-            🎵 Smart Music
-          </h2>
-          <p id="songTitle" class="mt-3 text-gray-600 text-center">Now Playing: <span class="font-medium">"Sunrise Vibes"</span></p>
-          <div class="flex justify-center gap-4 mt-4">
-            <button id="prevSong" class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">⏮</button>
-            <button id="playPause" class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">⏸️</button>
-            <button id="nextSong" class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">⏭</button>
-          </div>
-        </div> -->
-
-
-      </div>
-    </div>
-
-  </body>
-</html>
-
+<!-- SCRIPTS -->
 <script>
-        // Simulate electricity usage changing
-        setInterval(() => {
-            const electricityElement = document.getElementById('electricity');
-            const newUsage = (1.5 + Math.random() * 1.5).toFixed(2);
-            electricityElement.textContent = `${newUsage} kWh`;
-        }, 3000);
+  setInterval(() => {
+    document.getElementById('electricity').textContent =
+      (1.5 + Math.random()).toFixed(2) + ' kWh';
+  }, 3000);
 
-        // Toggle security status
-        const securityBtn = document.getElementById("securityBtn");
-        const lockIcon = document.getElementById("lockIcon");
+  const securityBtn = document.getElementById("securityBtn");
+  const lockIcon = document.getElementById("lockIcon");
 
-        securityBtn.addEventListener("click", () => {
-            if (securityBtn.textContent === "Armed") {
-            // Change to Disarmed
-            securityBtn.textContent = "Disarmed";
-            securityBtn.classList.remove("bg-green-500", "hover:bg-green-600");
-            securityBtn.classList.add("bg-red-500", "hover:bg-red-600");
-            lockIcon.textContent = "🔓";
-            } else {
-            // Change back to Armed
-            securityBtn.textContent = "Armed";
-            securityBtn.classList.remove("bg-red-500", "hover:bg-red-600");
-            securityBtn.classList.add("bg-green-500", "hover:bg-green-600");
-            lockIcon.textContent = "🔒";
-            }
-        });
-    </script>
+  securityBtn.onclick = () => {
+    const armed = securityBtn.textContent === "Armed";
+    securityBtn.textContent = armed ? "Disarmed" : "Armed";
+    securityBtn.className = armed
+      ? "bg-red-500 text-white px-4 py-1 rounded-xl font-bold"
+      : "bg-green-500 text-white px-4 py-1 rounded-xl font-bold";
+    lockIcon.textContent = armed ? "🔓" : "🔒";
+  };
 
-    <!-- Sidebar Active Button Script -->
-    <script>
-      const navButtons = document.querySelectorAll(".nav-btn");
-      navButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          navButtons.forEach((b) => {
-            b.classList.remove("bg-blue-600", "text-white", "animate-glow");
-          });
-          btn.classList.add("bg-blue-600", "text-white", "animate-glow");
-        });
-      });
-    </script>
+  const lampSwitch = document.getElementById("lampSwitch");
+  const lampStatus = document.getElementById("lampStatus");
+  const lightOptions = document.getElementById("lightOptions");
 
-    <!-- Device & Feature Scripts -->
-    <script>
-      const lampSwitch = document.getElementById('lampSwitch');
-      const lampStatus = document.getElementById('lampStatus');
-      const lightOptions = document.getElementById('lightOptions');
-      
-      lampSwitch.addEventListener('change', () => {
-        if (lampSwitch.checked) {
-          lampStatus.textContent = 'Lamp is ON';
-          lightOptions.classList.remove('hidden');
-        } else {
-          lampStatus.textContent = 'Lamp is turned off';
-          lightOptions.classList.add('hidden');
-        }
-      });
+  lampSwitch.onchange = () => {
+    lampStatus.textContent = lampSwitch.checked ? "Lamp is ON" : "Lamp is off";
+    lightOptions.classList.toggle("hidden", !lampSwitch.checked);
+  };
 
-      function setLightType(type) {
-        document.getElementById('warmBtn').className = 'rounded-full px-6 py-2 border border-blue-500 text-blue-500';
-        document.getElementById('daylightBtn').className = 'rounded-full px-6 py-2 border border-blue-500 text-blue-500';
-        document.getElementById('coolBtn').className = 'rounded-full px-6 py-2 border border-blue-500 text-blue-500';
-        const active = document.getElementById(type.toLowerCase() + 'Btn');
-        active.className = 'rounded-full px-6 py-2 bg-blue-500 text-white';
-        lampStatus.textContent = 'Lamp mode: ' + type;
-      }
-
-      // Vehicle Tracker
-      document.getElementById("updateLocation").addEventListener("click", () => {
-        const lat = (-6.2 + (Math.random() - 0.5) * 0.02).toFixed(4);
-        const lng = (106.8 + (Math.random() - 0.5) * 0.02).toFixed(4);
-        document.getElementById("lat").textContent = lat;
-        document.getElementById("lng").textContent = lng;
-      });
-    </script>
-
-    <!-- <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // Smart Music
-    const songs = ["Sunrise Vibes", "Evening Breeze", "City Lights", "Ocean Dreams"];
-    let current = 0;
-    let playing = true;
-
-    const songTitle = document.getElementById("songTitle");
-    const playPause = document.getElementById("playPause");
-    const nextSong = document.getElementById("nextSong");
-    const prevSong = document.getElementById("prevSong");
-
-    function updateSong() {
-      songTitle.innerHTML = `Now Playing: <span class="font-medium">"${songs[current]}"</span>`;
-    }
-
-    nextSong.addEventListener("click", () => {
-      current = (current + 1) % songs.length;
-      updateSong();
+  function setLightType(type) {
+    ["warm","daylight","cool"].forEach(id => {
+      document.getElementById(id+"Btn").className =
+        "px-6 py-2 rounded-full border border-blue-500 text-blue-500";
     });
+    document.getElementById(type.toLowerCase()+"Btn").className =
+      "px-6 py-2 rounded-full bg-blue-500 text-white";
+    lampStatus.textContent = "Lamp mode: " + type;
+  }
 
-    prevSong.addEventListener("click", () => {
-      current = (current - 1 + songs.length) % songs.length;
-      updateSong();
-    });
+  document.getElementById("updateLocation").onclick = () => {
+    document.getElementById("lat").textContent =
+      (-6.2 + Math.random()*0.02).toFixed(4);
+    document.getElementById("lng").textContent =
+      (106.8 + Math.random()*0.02).toFixed(4);
+  };
+</script>
 
-    playPause.addEventListener("click", () => {
-      playing = !playing;
-      playPause.textContent = playing ? "⏸️" : "▶️";
-    });
-  });
-</script> -->
+</body>
+</html>

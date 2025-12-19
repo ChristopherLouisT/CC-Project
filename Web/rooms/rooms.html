@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rooms - Smart Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<style>
-    /* Glassmorphism utilities */
+
+  <style>
+    /* Glassmorphism */
     .glass {
       background: rgba(255, 255, 255, 0.55);
       backdrop-filter: blur(16px);
@@ -19,124 +19,133 @@
       -webkit-backdrop-filter: blur(20px);
     }
 
-    /* Soft glow */
-    .glow {
-      box-shadow: 0 0 18px rgba(59,130,246,.45);
-    }
-
-    /* Floating hover card */
-    .hover-float:hover {
-      transform: translateY(-3px) scale(1.02);
-      transition: 200ms ease;
-    }
-
-    /* Active nav highlight */
     .active-pill {
       background: linear-gradient(135deg, #3b82f6, #60a5fa);
       color: white !important;
       box-shadow: 0 4px 14px rgba(59,130,246,.4);
     }
-
-    /* Animated lock glow */
-    @keyframes lockPulse {
-      0% { text-shadow: 0 0 4px rgba(0,255,100,0.4); }
-      50% { text-shadow: 0 0 14px rgba(0,255,100,0.9); }
-      100% { text-shadow: 0 0 4px rgba(0,255,100,0.4); }
-    }
-    .lock-glow {
-      animation: lockPulse 1.6s infinite;
-    }
   </style>
+</head>
 
 <body class="min-h-screen bg-gradient-to-br from-blue-200 to-blue-50 flex flex-col lg:flex-row font-sans">
 
-  <!-- Sidebar -->
-   <!-- Sidebar -->
-    <aside class="w-64 glass-dark text-white shadow-2xl p-6 flex flex-col justify-between rounded-r-3xl">
+<!-- SIDEBAR / TOPBAR -->
+<aside class="w-full lg:w-64 glass-dark text-white shadow-2xl
+              p-4 lg:p-6
+              flex flex-row lg:flex-col justify-between
+              rounded-b-3xl lg:rounded-b-none lg:rounded-r-3xl
+              sticky top-0 z-50">
 
-    <div>
-      <div class="text-center py-4 mb-8 rounded-2xl bg-white/20 font-bold text-xl">
-        Smart Home 🌐
-      </div>
+  <div class="flex flex-row lg:flex-col gap-4 w-full items-center lg:items-stretch">
 
-      <div class="space-y-3">
-        <a href="../index.html" class="block py-3 rounded-xl text-center bg-white/20 hover:bg-white/10 transition">
-          🏠 Home
-        </a>
-        <a href="rooms/rooms.html" class="block py-3 rounded-xl text-center bg-white/20 hover:bg-white/10 active-pill">
-          🏘️ Rooms
-        </a>
-      </div>
+    <div class="hidden lg:block text-center py-4 mb-6 rounded-2xl bg-white/20 font-bold text-xl">
+      Smart Home 🌐
     </div>
 
-    <button class="w-full py-3 mt-8 text-center rounded-xl bg-white/10 hover:bg-white/30 transition">
-      🚪 Log out
-    </button>
-
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <div class="flex-1 p-10 space-y-8">
-    <h1 class="text-3xl font-semibold text-gray-800">Rooms Overview</h1>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-      <!-- Bedroom 1 -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🛏️ Parent Room</h2>
-        <a href='bedroom/parent_bed.html' class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open</a>
-      </div>
-
-      <!-- Bedroom 2 -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🛏️ Child 1's Room</h2>
-        <a href='bedroom/child1_bed.html' class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open</a>
-      </div>
-
-      <!-- Bedroom 3 -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🛏️ Child 2's Room</h2>
-        <a href='bedroom/child2_bed.html' class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open</a>
-      </div>
-
-      <!-- Living Room -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🛋️ Living Room</h2>
-        <a href="others/living_room.html" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open</a>
-      </div>
-
-      <!-- Kitchen -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🍳 Kitchen</h2>
-        <a href="others/kitchen.html" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open</a>
-      </div>
-
-      <!-- Front Door -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🚪 Front Door</h2>
-        <a href='others/front_door.html' class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open</a>
-      </div>
-
-      <!-- Bedroom 4 -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🛏️ Guest Room</h2>
-        <a href='bedroom/guest_bed.html' class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open</a>
-      </div>
-
-      <!-- Toilet 1 -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🚽 Toilet 1</h2>
-        <a href='toilet/toilet1.html' class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open</a>
-      </div>
-
-      <!-- Toilet 2 -->
-      <div class="bg-white shadow-lg rounded-2xl p-6 text-center">
-        <h2 class="text-xl font-semibold text-gray-800">🚽 Toilet 2</h2>
-        <a href='toilet/toilet2.html' class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Open<a>
-      </div>
-
+    <div class="flex flex-row lg:flex-col gap-3 w-full justify-center">
+      <a href="../index.html"
+         class="py-2 px-4 rounded-xl text-center bg-white/20 hover:bg-white/10 transition">
+        🏠 Home
+      </a>
+      <a href="rooms.html"
+         class="py-2 px-4 rounded-xl text-center bg-white/20 hover:bg-white/10 active-pill">
+        🏘️ Rooms
+      </a>
     </div>
+
   </div>
+
+  <button class="hidden lg:block w-full py-3 mt-6 rounded-xl bg-white/10 hover:bg-white/30 transition">
+    🚪 Log out
+  </button>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 p-4 sm:p-6 lg:p-10 space-y-6">
+
+<h1 class="text-2xl sm:text-3xl font-semibold text-gray-800">
+  Rooms Overview
+</h1>
+
+<!-- ROOMS GRID -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+
+  <!-- Room Card -->
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🛏️ Parent Room</h2>
+    <a href="bedroom/parent_bed.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🛏️ Child 1's Room</h2>
+    <a href="bedroom/child1_bed.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🛏️ Child 2's Room</h2>
+    <a href="bedroom/child2_bed.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🛋️ Living Room</h2>
+    <a href="others/living_room.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🍳 Kitchen</h2>
+    <a href="others/kitchen.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🚪 Front Door</h2>
+    <a href="others/front_door.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🛏️ Guest Room</h2>
+    <a href="bedroom/guest_bed.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🚽 Toilet 1</h2>
+    <a href="toilet/toilet1.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+  <div class="glass shadow-lg rounded-2xl p-6 text-center hover:scale-[1.02] transition">
+    <h2 class="text-lg font-semibold">🚽 Toilet 2</h2>
+    <a href="toilet/toilet2.html"
+       class="inline-block mt-4 px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+      Open
+    </a>
+  </div>
+
+</div>
+
+</main>
 
 </body>
 </html>
